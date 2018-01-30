@@ -15,6 +15,12 @@ ENV DLPATH /
 # 1. fetch and install temporary build programs,
 # 2. build cloud-torrent alpine binary
 # 3. remove build programs
+
+ADD entrypoint.sh /entrypoint.sh
+
+RUN mkdir -p /conf
+ADD rclone.conf /conf/rclone.conf
+
 RUN set -ex \
 	&& apk update \
 	&& apk add ca-certificates fuse unzip \
@@ -41,10 +47,9 @@ RUN set -ex \
 	&& patch -p2 -i /no-pic.patch \
 	&& ./make.bash \
 	&& mkdir -p $PACKAGE_DIR \
-	&& mkdir -p /conf \
 	&& mkdir -p $DLPATH/downloads \
 	&& chmod 777 $DLPATH/downloads \
-	&& chmod 777 /conf \
+	&& chmod -R 777 /conf \
 	&& git clone https://$PACKAGE.git $PACKAGE_DIR \
 	&& cd $PACKAGE_DIR \
 	&& go build -ldflags "-X main.VERSION=$(git describe --abbrev=0 --tags)" -o /usr/local/bin/$NAME \
@@ -53,9 +58,6 @@ RUN set -ex \
 #run!
 
 EXPOSE 3000
-
-ADD entrypoint.sh /entrypoint.sh
-ADD rclone.conf /conf/rclone.conf
 
 RUN chmod +x /entrypoint.sh
 
