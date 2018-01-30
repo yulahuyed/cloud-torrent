@@ -38,9 +38,7 @@ RUN set -ex \
 	&& ./make.bash \
 	&& mkdir -p $PACKAGE_DIR \
 	&& mkdir -p $DLPATH/downloads \
-	&& chmod -R 777 $DLPATH/downloads \
-	&& chmod -R 777 /run \
-	&& chmod -R 777 /etc \
+	&& chmod 777 $DLPATH/downloads \
 	&& git clone https://$PACKAGE.git $PACKAGE_DIR \
 	&& cd $PACKAGE_DIR \
 	&& go build -ldflags "-X main.VERSION=$(git describe --abbrev=0 --tags)" -o /usr/local/bin/$NAME \
