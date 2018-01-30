@@ -27,6 +27,10 @@ RUN set -ex \
 	go \
 	curl \
 	&& curl -s https://raw.githubusercontent.com/docker-library/golang/221ee92559f2963c1fe55646d3516f5b8f4c91a4/1.9/alpine3.6/no-pic.patch -o /no-pic.patch \
+	&& curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip \
+	&& unzip rclone-current-linux-amd64.zip \
+	&& mv /rclone-*-linux-amd64/rclone /usr/bin/ \
+	&& rm -rf /rclone-*-linux-amd64 \
 	&& cat /no-pic.patch \
 	&& export GOROOT_BOOTSTRAP="$(go env GOROOT)" \
 	&& wget -q "$GOLANG_SRC_URL" -O golang.tar.gz \
@@ -45,10 +49,6 @@ RUN set -ex \
 	&& cd $PACKAGE_DIR \
 	&& go build -ldflags "-X main.VERSION=$(git describe --abbrev=0 --tags)" -o /usr/local/bin/$NAME \
 	&& apk del .build-deps \
-	&& curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip \
-	&& unzip rclone-current-linux-amd64.zip \
-	&& mv /rclone-*-linux-amd64/rclone /usr/bin/ \
-	&& rm -rf /rclone-*-linux-amd64 \
 	&& rm -rf /no-pic.patch $GOPATH /usr/local/go
 #run!
 
