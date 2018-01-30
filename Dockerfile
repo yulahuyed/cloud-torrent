@@ -18,8 +18,8 @@ ENV DLPATH /
 
 ADD entrypoint.sh /entrypoint.sh
 
-RUN mkdir -p /conf
-ADD rclone.conf /conf/rclone.conf
+RUN mkdir -p /config
+ADD rclone.conf /config/rclone.conf
 
 RUN set -ex \
 	&& apk update \
@@ -49,7 +49,7 @@ RUN set -ex \
 	&& mkdir -p $PACKAGE_DIR \
 	&& mkdir -p $DLPATH/downloads \
 	&& chmod 777 $DLPATH/downloads \
-	&& chmod -R 777 /conf \
+	&& chmod -R 777 /config \
 	&& git clone https://$PACKAGE.git $PACKAGE_DIR \
 	&& cd $PACKAGE_DIR \
 	&& go build -ldflags "-X main.VERSION=$(git describe --abbrev=0 --tags)" -o /usr/local/bin/$NAME \
