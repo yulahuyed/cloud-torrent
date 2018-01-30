@@ -17,7 +17,7 @@ ENV DLPATH /
 # 3. remove build programs
 RUN set -ex \
 	&& apk update \
-	&& apk add ca-certificates \
+	&& apk add ca-certificates fuse unzip \
 	&& apk add --no-cache --virtual .build-deps \
 	bash \
 	gcc \
@@ -37,15 +37,26 @@ RUN set -ex \
 	&& patch -p2 -i /no-pic.patch \
 	&& ./make.bash \
 	&& mkdir -p $PACKAGE_DIR \
+	&& mkdir -p /conf \
 	&& mkdir -p $DLPATH/downloads \
 	&& chmod 777 $DLPATH/downloads \
+	&& chmod 777 /conf \
 	&& git clone https://$PACKAGE.git $PACKAGE_DIR \
 	&& cd $PACKAGE_DIR \
 	&& go build -ldflags "-X main.VERSION=$(git describe --abbrev=0 --tags)" -o /usr/local/bin/$NAME \
 	&& apk del .build-deps \
+	&& curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip \
+	&& unzip rclone-current-linux-amd64.zip \
+	&& mv /rclone-*-linux-amd64/rclone /usr/bin/ \
+	&& rm -rf /rclone-*-linux-amd64 \
 	&& rm -rf /no-pic.patch $GOPATH /usr/local/go
 #run!
 
 EXPOSE 3000
 
-ENTRYPOINT ["cloud-torrent"]
+ADD entrypoint.sh /entrypoint.sh
+ADD rclone.conf /conf/rclone.conf
+
+RUN chmod +x /entrypoint.sh
+
+CMD /entrypoint.sh
