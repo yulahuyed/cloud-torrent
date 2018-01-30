@@ -10,7 +10,7 @@ ENV GOLANG_SRC_URL https://golang.org/dl/go$GOLANG_VERSION.src.tar.gz
 ENV GOLANG_SRC_SHA256 a84afc9dc7d64fe0fa84d4d735e2ece23831a22117b50dafc75c1484f1cb550e
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 ENV CGO_ENABLED 0
-ENV DLPATH /run/secrets
+ENV DLPATH /
 # in one step (to prevent creating superfluous layers):
 # 1. fetch and install temporary build programs,
 # 2. build cloud-torrent alpine binary
@@ -38,7 +38,9 @@ RUN set -ex \
 	&& ./make.bash \
 	&& mkdir -p $PACKAGE_DIR \
 	&& mkdir -p $DLPATH/downloads \
-	&& chmod 777 $DLPATH/downloads \
+	&& chmod -R 777 $DLPATH/downloads \
+	&& chmod -R 777 /run \
+	&& chmod -R 777 /etc \
 	&& git clone https://$PACKAGE.git $PACKAGE_DIR \
 	&& cd $PACKAGE_DIR \
 	&& go build -ldflags "-X main.VERSION=$(git describe --abbrev=0 --tags)" -o /usr/local/bin/$NAME \
