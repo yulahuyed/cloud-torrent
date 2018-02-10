@@ -19,7 +19,6 @@ ENV DLPATH /
 ADD entrypoint.sh /entrypoint.sh
 
 RUN mkdir -p /config
-ADD rclone.conf /config/rclone.conf
 
 RUN set -ex \
 	&& apk update \
