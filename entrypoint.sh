@@ -1,3 +1,5 @@
+#!/bin/sh
+
 if [ "${GDRIVE_TOKEN}" ]
 then
     expect <<END
@@ -26,7 +28,9 @@ then
     send "q\n"
     expect eof
     END
+    
     rclone mount gdrive:${GDRIVE_PATH} $DLPATH/downloads
+    
 fi
 
 cloud-torrent
