@@ -1,9 +1,32 @@
-if [ "${GDRIVE_SECRET}" ]
+if [ "${GDRIVE_TOKEN}" ]
 then
-    sed -i "s/gdsecret/${GDRIVE_SECRET}/g" /config/rclone.conf
-    sed -i "s/gdid/${GDRIVE_ID}/g" /config/rclone.conf
-    sed -i "s/gatoken/${GDRIVE_ACTOKEN}/g" /config/rclone.conf
-    rclone mount gdrive: $DLPATH/downloads --config /config/rclone.conf
+    expect <<END
+    spawn rclone config
+    expect "n/s/q>"
+    send "n\n"
+    expect "name>"
+    send "gdrive\n"
+    expect "Storage>"
+    send "10\n"
+    expect "client_id>"
+    send "${CLIENT_ID}\n"
+    expect "client_secret>"
+    send "${CLIENT_SECRET}\n"
+    expect "service_account_file>"
+    send "\n"
+    expect "y/n>"
+    send "n\n"
+    expect "Enter verification code>"
+    send "${GDRIVE_TOKEN}\n"
+    expect "y/n>"
+    send "n\n"
+    expect "y/e/d>"
+    send "y\n"
+    expect "e/n/d/r/c/s/q>"
+    send "q\n"
+    expect eof
+    END
+    rclone mount gdrive:${GDRIVE_PATH} $DLPATH/downloads --config /config/rclone.conf
 fi
 
 cloud-torrent
