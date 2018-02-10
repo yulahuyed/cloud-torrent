@@ -22,7 +22,7 @@ RUN mkdir -p /config
 
 RUN set -ex \
 	&& apk update \
-	&& apk add ca-certificates fuse unzip \
+	&& apk add ca-certificates fuse unzip expect \
 	&& apk add --no-cache --virtual .build-deps \
 	bash \
 	gcc \
