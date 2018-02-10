@@ -26,7 +26,7 @@ then
     send "q\n"
     expect eof
     END
-    rclone mount gdrive:${GDRIVE_PATH} $DLPATH/downloads --config /config/rclone.conf
+    rclone mount gdrive:${GDRIVE_PATH} $DLPATH/downloads
 fi
 
 cloud-torrent
