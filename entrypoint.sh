@@ -57,8 +57,16 @@ echo "add_header Cookie ${COOKIE}" >> /etc/davfs2/davfs2.conf
 
 rm cookie.txt
 
-/sbin/mount.davfs ${OD_PATH} $DLPATH/downloads
-
+expect <<END
+spawn /sbin/mount.davfs ${OD_PATH} $DLPATH/downloads
+expect "username"
+send "\n"
+send "\n"
+expect "password"
+send "\n"
+send "\n"
+expect eof
+END
 fi
 
 cloud-torrent
