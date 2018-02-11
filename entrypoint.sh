@@ -59,11 +59,9 @@ rm cookie.txt
 
 expect <<END
 spawn /sbin/mount.davfs ${OD_PATH} $DLPATH/downloads
-expect "username"
+expect "Username:"
 send "\n"
-send "\n"
-expect "password"
-send "\n"
+expect "Password:"
 send "\n"
 expect eof
 END
