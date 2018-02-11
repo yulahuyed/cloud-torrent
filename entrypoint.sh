@@ -28,8 +28,7 @@ expect "e/n/d/r/c/s/q>"
 send "q\n"
 expect eof
 END
-rclone mount gdrive:${GDRIVE_PATH} $DLPATH/downloads
-
+rclone mount gdrive:${GDRIVE_PATH} $DLPATH/downloads --allow-other --vfs-cache-mode writes --allow-non-empty &
 fi
 
 cloud-torrent
